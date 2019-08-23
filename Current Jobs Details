@@ -1,0 +1,33 @@
+#!/bin/bash
+
+## Current Job's Details
+
+## Total Runing Jobs Details by Users
+clear
+echo "Running Single Core Job's : "
+squeue -o %A-%u-%C-%m-%t-%P-%N | grep -w "standard" | grep "R" | grep -w "1"
+echo ""
+echo "Total Number of Runing Jobs and Cocre's :"
+squeue -o %A-%u-%C-%m-%t-%P-%N | grep -w "R" | tr '-' ' ' > trjc.txt && cat trjc.txt | wc -l &&  awk '{sum += $3} END {print sum}' trjc.txt
+echo ""
+echo "Runing Job's Details by User's : "
+squeue -o %A-%u-%C-%m-%t-%P-%N | grep "R" | tr '-' ' ' > trjc.txt && cat trjc.txt | awk '{print $2, $3}' > raw.txt && awk -F: '{sub(/[. ,].*/, "", $2); a[tolower($1)]++} END{for (n in a)print a[n],n}' raw.txt | sort -nr
+
+rm -rf raw.txt
+rm -rf trjc.txt
+## Total Pending Jobs Details by Users
+clear
+echo "Pending Single Core Job's : "
+squeue -o %A-%u-%C-%m-%t-%P-%N | grep -w "standard" | grep "PD" | grep -w "1"
+echo ""
+echo "Total Number of Pending Jobs and Cocre's :"
+squeue -o %A-%u-%C-%m-%t-%P-%N | grep -w "PD" | tr '-' ' ' > trjc.txt && cat trjc.txt | wc -l &&  awk '{sum += $3} END {print sum}' trjc.txt
+echo ""
+echo "Pending Job's Details by User's : "
+squeue -o %A-%u-%C-%m-%t-%P-%N | grep -w "PD" | tr '-' ' ' > trjc.txt && cat trjc.txt | awk '{print $2, $3}' > raw.txt && awk -F: '{sub(/[. ,].*/, "", $2); a[tolower($1)]++} END{for (n in a)print a[n],n}' raw.txt | sort -nr
+
+rm -rf raw.txt
+rm -rf trjc.txt
+
+
+#By Prasenjit Mukherjee
